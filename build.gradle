@@ -1,0 +1,13 @@
+group 'com.sandbox'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'scala'
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+	compile 'org.scala-lang:scala-library:2.11.7'
+	compile 'org.scalatest:scalatest_2.11:2.2.4'
+}
