@@ -85,12 +85,17 @@ class ScalaLearning extends FunSuite {
   // ===================================================================================================================
   test("list") {
     val one = List(1, 2)
-    assert(one(1) == 1)
+    assert(one(0) == 1)
 
     // :: operator is invoked on right operand
     // Scala rule - when method name ends in : then it is invoked on right
     val two = 1 :: one
 
+    // Nil is empty list (extends List)
+    val tree = 1 :: 2 :: 3 :: Nil
+
+    // concatenates 2 lists
+    one ::: tree
   }
 
   // map
@@ -102,4 +107,15 @@ class ScalaLearning extends FunSuite {
     assert(capital("US") == "Washington")
   }
 
+  // tuples
+  // - immutable, can contain diff types of objects
+  // - supports tuple with max 22 fields
+  // ===================================================================================================================
+  test("tuples") {
+    // _1, _2 are fields names
+    val pair = (1, "a")
+    assert(pair._1 == 1)
+    assert(pair._2 == "a")
+    assert(pair.isInstanceOf[Tuple2[Int, String]])
+  }
 }
