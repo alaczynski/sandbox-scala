@@ -3,7 +3,6 @@ import org.scalatest.FunSuite
 class ScalaLearning extends FunSuite {
 
   // common
-  // ===================================================================================================================
   test("common - syntax") {
     // ++ operator is not supported
     var i = 0
@@ -19,11 +18,44 @@ class ScalaLearning extends FunSuite {
 
     // semicolon
     // - optional unless many statements in one line
+    1; // ; is optional
+
+
+    // method parentheses
+    // - could be omitted when no args but convention is
+    // - omit for no side effect factions (return sth), e.g. "a".toUpperCase
+    // - should be present for side effect functions, e.g. println()
+
+    // constant, user upper CamelCase for names
+    val MaxValue = 123 // instead MAX_VALUE
+
+    // literal identifier, could contain any string even keyword
+    val `class` = 1
+    assert(`class` == 1)
+    // added to access java method witch name is scala keyword e.g. Thread.`yield`();
+
+    // variable assignment returns always as Unit
+    var line = ""
+    assert((line = "a") ==())
   }
 
   test("common - operators") {
     // technically scala does not have method overloading, instead operators are methods
     assert(1 + 2 == (1).+(2))
+
+    // any method could be invoked in operator notation
+    // infix - method between object and parameters
+    val s = "a"
+    assert(s.indexOf('a') == 0)
+    assert((s indexOf 'a') == 0)
+    assert((s indexOf('a', 0)) == 0) // method with two parameters
+
+    // prefix - method/operator before
+    // limited to special chars: +-!~, so method unary_* cannot be invoked *<object>
+    assert(-7 == (7).unary_-)
+
+    // postfix - method after
+    assert(("a" toUpperCase) == "A")
   }
 
   test("common - code transformation") {
@@ -77,7 +109,9 @@ class ScalaLearning extends FunSuite {
     assert(noResult().isInstanceOf[Unit])
 
     // procedural function - no = sign
-    def procedure() {"result will be transformed always to Unit"}
+    def procedure() {
+      "result will be transformed always to Unit"
+    }
     assert(procedure() ==())
   }
 
@@ -176,6 +210,30 @@ class ScalaLearning extends FunSuite {
     class SomeClass {}
     val objectOfSomeClass = new SomeClass
     assert(objectOfSomeClass.isInstanceOf[SomeClass])
+
+    // brackets could be skipped
+    class SomeClass2
+
+    // class parameters
+    // - primary constructor is generated for those parameters
+    class SomeClass3(a: Int, b: String)
+    new SomeClass3(1, "a")
+
+    // any code which is not member definition will be placed in primary constructor
+    class SomeClass4 {
+      assert(true)
+    }
+
+    // precondition
+    // - use required method
+    class SomeClass5(a: Int) {
+      require(a > 0)
+    }
+
+    // auxiliary constructors - other then primary
+    class WithAuxiliaryConstructor(a: Int, b: Int) {
+      def this(a: Int) = this(a, 0) // constructor, must invoke other constructor of the same class (not like in java)
+    }
   }
 
   /*
@@ -225,5 +283,19 @@ class ScalaLearning extends FunSuite {
   // application trait
   class SomeApp extends App {
     for (arg <- args) println(arg)
+  }
+
+  // control structure
+  // - if, while, for, try, match
+  //   - while, do-while returns Unit
+  // - returns value to make code less noisy and buggy, val instead of var
+  // ===================================================================================================================
+  test("for") {
+    // syntax <val> <- <generator>
+    for (i <- 1 to 5) i
+    for (i <- 1 until 5) i // 1,2,3,4
+
+    // filtering - if
+    for (i <- 1 to 5 if i % 2 == 0) i
   }
 }
