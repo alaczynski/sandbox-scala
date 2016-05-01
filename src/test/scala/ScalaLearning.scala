@@ -115,7 +115,24 @@ class ScalaLearning extends FunSuite {
     assert(procedure() ==())
   }
 
+  // 1. method - function as member of object
+  // 2. local function - function defined in other function
+  //    - can access variables of enclosing function
+  // 3. function literal
+  test("function - classification") {
+    // function literal
+    val lengthFunctionLiteral = (s: String) => s.length
+    assert(lengthFunctionLiteral("abc") == 3)
+    assert(lengthFunctionLiteral.isInstanceOf[Function1[String, Int]])
+
+    val lengthFunctionLiteralWithBlock = (s: String) => {
+      s.length
+    }
+    assert(lengthFunctionLiteral("abc") == 3)
+  }
+
   test("function - partially applied function") {
+    // todo
   }
 
   // array
@@ -295,7 +312,61 @@ class ScalaLearning extends FunSuite {
     for (i <- 1 to 5) i
     for (i <- 1 until 5) i // 1,2,3,4
 
-    // filtering - if
-    for (i <- 1 to 5 if i % 2 == 0) i
+    // filtering - if, many if statements allowed
+    for (i <- 1 to 5 if i % 2 == 0; if true) i
+
+    // nested loops
+    for (
+      word <- List("one", "two"); // semicolon is required when () are used, could be skipped for {}
+      letter <- word
+    ) assert(word.contains(letter))
+    // equivalent with {} plus mid-stream variable bindings
+    for {
+      word <- List("one", "two")
+      letter <- word
+      contains = word.contains(letter) // mid-stream variable bindings
+    } assert(contains)
+
+    // producing new collection - for clauses yield body
+    val ints = for (i <- 1 to 3) yield i
+    assert(ints == List(1, 2, 3))
+  }
+
+  // to catch exception pattern matching is used
+  test("try") {
+    try {
+      throw new NullPointerException
+    } catch {
+      case e: NullPointerException =>
+    }
+    // try-catch-finally returns value
+    // this is bad practice to return any value from finally block
+    val i: Int = try {
+      1
+    } finally {
+      2
+    }
+    assert(i == 1)
+    def f(): Int = try {
+      1
+    } finally {
+      return 2
+    } // return could be used only in method definition and override result from try block
+    assert(f() == 2)
+  }
+
+  // pattern matching
+  // similar to switch but
+  // - accept any type
+  // - breaks are implicit and not needed
+  // - return value
+  // ===================================================================================================================
+  test("matching") {
+    val i = "one" match {
+      case "one" => 1
+      case "two" => 2
+      case _ => -1 // _ represent in scala unknown value, in this case default
+    }
+    assert(i == 1)
   }
 }
